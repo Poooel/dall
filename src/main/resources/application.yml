@@ -1,0 +1,21 @@
+google:
+  sheets:
+    applicationName: dall
+    tokenDirectoryPath: tokens
+    credentialsFilePath: /credentials.json
+    spreadsheetId: 15UKny9G821-Z6b5sVuz7A-VnNtQcrT68vaZQeV58fPk
+    scopes:
+      - https://www.googleapis.com/auth/spreadsheets
+    centerDistricts:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 6
+      - 7
+      - 8
+    outsideDistricts:
+      - 9
+      - 10
+      - 12
+      - 14
