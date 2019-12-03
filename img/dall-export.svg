@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="700px" height="500px" viewBox="0 0 700 500" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <linearGradient x1="0%" y1="50%" x2="100%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#000000" stop-opacity="0.4" offset="0%"></stop>
+            <stop stop-color="#000000" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="0%" y1="50%" x2="100%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#000000" stop-opacity="0.4" offset="0%"></stop>
+            <stop stop-color="#000000" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#FFEE74" offset="0%"></stop>
+            <stop stop-color="#EFC723" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <text id="dall" font-family="SulphurPoint-Bold, Sulphur Point" font-size="150" font-weight="bold" fill="#000000">
+            <tspan x="234" y="459">dall</tspan>
+        </text>
+        <polygon id="floor" fill="#F6C016" points="555 178 555 328 155 328 155 327 154 327 154 177 204 177 204 278 505 278 505 178"></polygon>
+        <rect id="left-shadow" fill="url(#linearGradient-1)" transform="translate(530, 203) rotate(90) translate(-530, -203) " x="505" y="178" width="50" height="50"></rect>
+        <rect id="right-shadow" fill="url(#linearGradient-2)" transform="translate(179, 202) rotate(90) translate(-179, -202) " x="154" y="177" width="50" height="50"></rect>
+        <polygon id="roof" fill="url(#linearGradient-3)" points="349 37 350 38 607 186 582 229 349 95 117 229 92 186 349 38"></polygon>
+    </g>
+</svg>
