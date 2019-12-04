@@ -29,8 +29,8 @@ public class DeleteService {
     }
 
     @SneakyThrows
-    void deleteRange(String range) {
-        UpdateValuesResponse response = spreadsheet
+    void deleteRange(String range, int linksToDelete) {
+        spreadsheet
             .values()
             .update(
                 googleCredentialsConfiguration.getSpreadsheetId(),
@@ -40,7 +40,7 @@ public class DeleteService {
             .setValueInputOption("USER_ENTERED")
             .execute();
 
-        log.info("Deleted {} link(s).", response.getUpdatedCells());
+        log.info("Deleted {} link{}.", linksToDelete, linksToDelete > 1 ? "s" : "");
     }
 
     private List<List<Object>> getDeleteObject() {

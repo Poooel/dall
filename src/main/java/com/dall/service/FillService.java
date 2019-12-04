@@ -49,21 +49,21 @@ public class FillService {
 
         if (links.isEmpty()) {
             log.error("No links to scrap.");
-        }
+        } else {
+            for (String link : links) {
+                ScrapService.ScrapedAd scrapedAd = scrapService.load(link);
 
-        for (String link : links) {
-            ScrapService.ScrapedAd scrapedAd = scrapService.load(link);
-
-            if (scrapedAd.getRemoved()) {
-                log.error("Ad has been removed: {}.", link);
-            } else if (duplicateService.exists(scrapedAd.getShortenedLink())) {
-                log.error("Duplicate ad: {}.", link);
-            } else {
-                writeService.writeToSheet(scrapedAd.transform());
+                if (scrapedAd.getRemoved()) {
+                    log.error("Ad has been removed: {}.", link);
+                } else if (duplicateService.exists(scrapedAd.getShortenedLink())) {
+                    log.error("Duplicate ad: {}.", link);
+                } else {
+                    writeService.writeToSheet(scrapedAd.transform());
+                }
             }
-        }
 
-        deleteService.deleteRange(dallConfiguration.getLinksRange());
+            deleteService.deleteRange(dallConfiguration.getLinksRange(), links.size());
+        }
     }
 
     @SneakyThrows

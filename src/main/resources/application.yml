@@ -21,7 +21,7 @@ dall:
     - 10
     - 12
     - 14
-  links-range: Links!A1:A100
+  links-range: Links!A1:A1000
   starting-cell-city-centre: 3
   starting-cell-suburb: 3
   starting-column-city-centre: E
