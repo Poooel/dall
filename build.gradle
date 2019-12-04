@@ -33,15 +33,13 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 
 	// Google Sheets API
-	compile 'com.google.api-client:google-api-client:1.30.5'
-	compile 'com.google.oauth-client:google-oauth-client-jetty:1.30.4'
+	compile 'com.google.api-client:google-api-client:1.25.0'
+	compile 'com.google.oauth-client:google-oauth-client-jetty:1.25.0'
 	compile 'com.google.apis:google-api-services-sheets:v4-rev604-1.25.0'
 
 	// Jsoup
 	compile 'org.jsoup:jsoup:1.12.1'
 
-	// Jackson
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
-	implementation 'com.fasterxml.jackson.core:jackson-core:2.10.1'
-	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.10.1'
+	// Guava
+	implementation 'com.google.guava:guava:28.1-jre'
 }

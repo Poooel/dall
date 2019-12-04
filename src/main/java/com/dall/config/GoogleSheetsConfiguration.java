@@ -10,7 +10,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.google.api.services.sheets.v4.Sheets;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,14 +21,7 @@ import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 
 @Configuration
-public class SheetsCredentialsConfiguration {
-    private final SheetsConfiguration sheetsConfiguration;
-
-    @Autowired
-    public SheetsCredentialsConfiguration(SheetsConfiguration sheetsConfiguration) {
-        this.sheetsConfiguration = sheetsConfiguration;
-    }
-
+public class GoogleSheetsConfiguration {
     @Bean
     public NetHttpTransport getNetHttpTransport() throws GeneralSecurityException, IOException {
         return GoogleNetHttpTransport.newTrustedTransport();
@@ -40,23 +33,40 @@ public class SheetsCredentialsConfiguration {
     }
 
     @Bean
-    public Credential getCredentials(NetHttpTransport httpTransport, JsonFactory jsonFactory) throws IOException {
-        InputStream in = getClass().getResourceAsStream(sheetsConfiguration.getCredentialsFilePath());
+    public Credential getCredentials(
+        NetHttpTransport httpTransport,
+        JsonFactory jsonFactory,
+        GoogleCredentialsConfiguration googleCredentialsConfiguration
+    ) throws IOException {
+        InputStream in = getClass().getResourceAsStream(googleCredentialsConfiguration.getCredentialsFilePath());
 
         if (in == null) {
-            throw new FileNotFoundException("Credentials not found: " + sheetsConfiguration.getCredentialsFilePath());
+            throw new FileNotFoundException("Credentials not found: " + googleCredentialsConfiguration.getCredentialsFilePath());
         }
 
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(jsonFactory, new InputStreamReader(in));
 
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow
-            .Builder(httpTransport, jsonFactory, clientSecrets, sheetsConfiguration.getScopes())
-            .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(sheetsConfiguration.getTokenDirectoryPath())))
+            .Builder(httpTransport, jsonFactory, clientSecrets, googleCredentialsConfiguration.getScopes())
+            .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(googleCredentialsConfiguration.getTokenDirectoryPath())))
             .setAccessType("offline")
             .build();
 
         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
 
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
+    }
+
+    @Bean
+    public Sheets getSheets(
+        NetHttpTransport httpTransport,
+        JsonFactory jsonFactory,
+        Credential credentials,
+        GoogleCredentialsConfiguration googleCredentialsConfiguration
+    ) {
+        return new Sheets
+            .Builder(httpTransport, jsonFactory, credentials)
+            .setApplicationName(googleCredentialsConfiguration.getApplicationName())
+            .build();
     }
 }

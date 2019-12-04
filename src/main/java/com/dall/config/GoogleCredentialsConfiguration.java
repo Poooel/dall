@@ -9,12 +9,10 @@ import java.util.List;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "google.sheets")
-public class SheetsConfiguration {
+public class GoogleCredentialsConfiguration {
     private String applicationName;
     private String tokenDirectoryPath;
     private String credentialsFilePath;
     private String spreadsheetId;
     private List<String> scopes;
-    private List<Integer> centerDistricts;
-    private List<Integer> outsideDistricts;
 }

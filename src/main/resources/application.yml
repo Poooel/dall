@@ -6,16 +6,25 @@ google:
     spreadsheetId: 15UKny9G821-Z6b5sVuz7A-VnNtQcrT68vaZQeV58fPk
     scopes:
       - https://www.googleapis.com/auth/spreadsheets
-    centerDistricts:
-      - 1
-      - 2
-      - 3
-      - 4
-      - 6
-      - 7
-      - 8
-    outsideDistricts:
-      - 9
-      - 10
-      - 12
-      - 14
+
+dall:
+  city-centre-districts:
+    - 1
+    - 2
+    - 3
+    - 4
+    - 6
+    - 7
+    - 8
+  suburb-districts:
+    - 9
+    - 10
+    - 12
+    - 14
+  links-range: Links!A1:A100
+  starting-cell-city-centre: 3
+  starting-cell-suburb: 3
+  starting-column-city-centre: E
+  starting-column-suburb: E
+  city-centre-sheet-name: Centre
+  suburb-sheet-name: Banlieue
