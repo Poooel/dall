@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="700px" height="500px" viewBox="0 0 700 500" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
-    <title>dall-export</title>
-    <desc>Created with Sketch.</desc>
     <defs>
-        <linearGradient x1="-1.65717563e-05%" y1="49.99998%" x2="99.9999807%" y2="49.99998%" id="linearGradient-1">
-            <stop stop-color="#000000" stop-opacity="0.3764706" offset="0%"></stop>
+        <linearGradient x1="0%" y1="50%" x2="100%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#000000" stop-opacity="0.4" offset="0%"></stop>
             <stop stop-color="#000000" stop-opacity="0" offset="100%"></stop>
         </linearGradient>
-        <linearGradient x1="-5.61757136e-05%" y1="49.9999619%" x2="99.9999411%" y2="49.9999619%" id="linearGradient-2">
-            <stop stop-color="#000000" stop-opacity="0.3764706" offset="0%"></stop>
+        <linearGradient x1="0%" y1="50%" x2="100%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#000000" stop-opacity="0.4" offset="0%"></stop>
             <stop stop-color="#000000" stop-opacity="0" offset="100%"></stop>
         </linearGradient>
-        <linearGradient x1="49.9999984%" y1="-1.01230676e-07%" x2="49.9999984%" y2="99.9999988%" id="linearGradient-3">
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-3">
             <stop stop-color="#FFEE74" offset="0%"></stop>
             <stop stop-color="#EFC723" offset="100%"></stop>
         </linearGradient>
