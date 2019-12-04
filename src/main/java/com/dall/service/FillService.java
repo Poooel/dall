@@ -46,6 +46,10 @@ public class FillService {
     public void fillSpreadSheet() {
         List<String> links = getLinksToScrap();
 
+        if (links.isEmpty()) {
+            log.error("No links to scrap.");
+        }
+
         for (String link : links) {
             ScrapService.ScrapedAd scrapedAd = scrapService.load(link);
 
