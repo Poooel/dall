@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,10 +73,14 @@ public class FillService {
             .get(googleCredentialsConfiguration.getSpreadsheetId(), dallConfiguration.getLinksRange())
             .execute();
 
-        return result.getValues()
-            .stream()
-            .flatMap(Collection::stream)
-            .map(Object::toString)
-            .collect(Collectors.toList());
+        if (result.getValues() == null) {
+            return new ArrayList<>();
+        } else {
+            return result.getValues()
+                .stream()
+                .flatMap(Collection::stream)
+                .map(Object::toString)
+                .collect(Collectors.toList());
+        }
     }
 }
