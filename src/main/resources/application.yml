@@ -24,7 +24,11 @@ dall:
   links-range: Links!A1:A1000
   starting-cell-city-centre: 3
   starting-cell-suburb: 3
-  starting-column-city-centre: E
-  starting-column-suburb: E
+  ending-cell-city-centre: 103
+  ending-cell-suburb: 103
+  starting-column-city-centre: B
+  starting-column-suburb: B
+  ending-column-city-centre: L
+  ending-column-suburb: L
   city-centre-sheet-name: Centre
   suburb-sheet-name: Banlieue

@@ -50,25 +50,29 @@ public class FillService {
         if (links.isEmpty()) {
             log.error("No links to scrap.");
         } else {
+            int adCounter = 0;
+
             for (String link : links) {
                 ScrapService.ScrapedAd scrapedAd = scrapService.load(link);
 
                 if (scrapedAd.getRemoved()) {
-                    log.error("Ad has been removed: {}.", link);
+                    log.error("Ad has been removed from website: {}.", link);
                 } else if (duplicateService.exists(scrapedAd.getShortenedLink())) {
                     log.error("Duplicate ad: {}.", link);
                 } else {
                     writeService.writeToSheet(scrapedAd.transform());
+                    adCounter++;
                 }
             }
 
+            log.info("Added {} ad{}.", adCounter, adCounter > 1 ? "s" : "");
             deleteService.deleteRange(dallConfiguration.getLinksRange(), links.size());
         }
     }
 
     @SneakyThrows
     private List<String> getLinksToScrap() {
-        ValueRange result = this.spreadsheet
+        ValueRange result = spreadsheet
             .values()
             .get(googleCredentialsConfiguration.getSpreadsheetId(), dallConfiguration.getLinksRange())
             .execute();

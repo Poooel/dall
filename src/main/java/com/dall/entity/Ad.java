@@ -1,10 +1,10 @@
 package com.dall.entity;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-import java.time.LocalDate;
-
-@Value
+@Data
+@AllArgsConstructor
 public class Ad {
     /**
      * Shorted link to the ad on daft.ie

@@ -5,12 +5,10 @@ import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,10 +16,17 @@ import java.util.regex.Pattern;
 @Service
 @Slf4j
 public class ScrapService {
+    private final DateService dateService;
+
+    @Autowired
+    public ScrapService(DateService dateService) {
+        this.dateService = dateService;
+    }
+
     public ScrapedAd load(String link) {
         try {
             Document document = Jsoup.connect(link).get();
-            return new ScrapedAd(document);
+            return new ScrapedAd(document, dateService);
         } catch (IOException e) {
             log.error("Unable to scrap ad.", e);
             return null;
@@ -29,8 +34,6 @@ public class ScrapService {
     }
 
     static class ScrapedAd {
-        private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("d/M/u", Locale.FRANCE);
-
         private static final Map<String, String> transformerLeaseTime = ImmutableMap.of(
             "Minimum 1 Year", "1 Year",
             "Minimum 6 Months", "6 Months",
@@ -44,9 +47,11 @@ public class ScrapService {
         );
 
         private final Document document;
+        private final DateService dateService;
 
-        public ScrapedAd(Document document) {
+        private ScrapedAd(Document document, DateService dateService) {
             this.document = document;
+            this.dateService = dateService;
         }
 
         public String getShortenedLink() {
@@ -97,7 +102,7 @@ public class ScrapService {
                 .split("<h3>Property Views:</h3>")[0]
                 .split(" ")[0];
 
-            return LocalDate.parse(lastModified, FORMATTER).toString();
+            return dateService.format(lastModified);
         }
 
         public String getViews() {
@@ -138,7 +143,7 @@ public class ScrapService {
                 getViews(),
                 getPrice(),
                 getPer(),
-                LocalDate.now().toString(),
+                dateService.getNow(),
                 getRemoved()
             );
         }

@@ -15,8 +15,12 @@ public class DallConfiguration {
     private String linksRange;
     private int startingCellCityCentre;
     private int startingCellSuburb;
+    private int endingCellCityCentre;
+    private int endingCellSuburb;
     private String startingColumnCityCentre;
     private String startingColumnSuburb;
+    private String endingColumnCityCentre;
+    private String endingColumnSuburb;
     private String cityCentreSheetName;
     private String suburbSheetName;
 }

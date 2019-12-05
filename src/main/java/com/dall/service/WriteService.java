@@ -45,6 +45,18 @@ public class WriteService {
         }
     }
 
+    @SneakyThrows
+    public void rawWriteToSheet(List<List<Object>> body, String range) {
+        ValueRange valueRange = new ValueRange().setValues(body);
+
+        spreadsheet.values()
+            .update(googleCredentialsConfiguration.getSpreadsheetId(), range, valueRange)
+            .setValueInputOption("USER_ENTERED")
+            .execute();
+
+        log.info("Updated {} ad{}.", body.size(), body.size() > 1 ? "s" : "");
+    }
+
     private void writeToCityCentreSheet(Ad ad) {
         write(ad, rangeService.getWritingRangeForCityCentre());
     }
