@@ -39,7 +39,4 @@ dependencies {
 
 	// Jsoup
 	compile 'org.jsoup:jsoup:1.12.1'
-
-	// Guava
-	implementation 'com.google.guava:guava:28.1-jre'
 }
