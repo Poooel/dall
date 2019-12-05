@@ -53,7 +53,9 @@ public class UpdateService {
         List<List<Object>> serializedAdsFromSuburb = serializeAds(updatedAdsFromSuburb);
 
         writeService.rawWriteToSheet(serializedAdsFromCityCentre, getRangeForCityCentre());
+        log.info("Updated {} ad{} for city centre.", serializedAdsFromCityCentre.size(), serializedAdsFromCityCentre.size() > 1 ? "s" : "");
         writeService.rawWriteToSheet(serializedAdsFromSuburb, getRangeForSuburb());
+        log.info("Updated {} ad{} for suburb.", serializedAdsFromSuburb.size(), serializedAdsFromSuburb.size() > 1 ? "s" : "");
     }
 
     private List<Ad> updateAds(List<Ad> ads) {

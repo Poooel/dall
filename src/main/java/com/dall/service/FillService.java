@@ -61,6 +61,7 @@ public class FillService {
                     log.error("Duplicate ad: {}.", link);
                 } else {
                     writeService.writeToSheet(scrapedAd.transform());
+                    log.info("Added {}.", scrapedAd.getShortenedLink());
                     adCounter++;
                 }
             }

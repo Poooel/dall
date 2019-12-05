@@ -6,7 +6,6 @@ import com.dall.entity.Ad;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +14,6 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-@Slf4j
 public class WriteService {
     private final Sheets.Spreadsheets spreadsheet;
     private final GoogleCredentialsConfiguration googleCredentialsConfiguration;
@@ -53,8 +51,6 @@ public class WriteService {
             .update(googleCredentialsConfiguration.getSpreadsheetId(), range, valueRange)
             .setValueInputOption("USER_ENTERED")
             .execute();
-
-        log.info("Updated {} ad{}.", body.size(), body.size() > 1 ? "s" : "");
     }
 
     private void writeToCityCentreSheet(Ad ad) {
@@ -74,8 +70,6 @@ public class WriteService {
             .update(googleCredentialsConfiguration.getSpreadsheetId(), range, valueRange)
             .setValueInputOption("USER_ENTERED")
             .execute();
-
-        log.info("Added {}.", ad.getShortenedLink());
     }
 
     private List<List<Object>> createBodyFromAd(Ad ad) {
