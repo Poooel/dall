@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -51,8 +52,8 @@ public class UpdateService {
         List<List<Object>> serializedAdsFromCityCentre = serializeAds(updatedAdsFromCityCentre);
         List<List<Object>> serializedAdsFromSuburb = serializeAds(updatedAdsFromSuburb);
 
-        writeService.rawWriteToSheet(serializedAdsFromCityCentre, getUpdateRangeForCityCentre());
-        writeService.rawWriteToSheet(serializedAdsFromSuburb, getUpdateRangeForSuburb());
+        writeService.rawWriteToSheet(serializedAdsFromCityCentre, getRangeForCityCentre());
+        writeService.rawWriteToSheet(serializedAdsFromSuburb, getRangeForSuburb());
     }
 
     private List<Ad> updateAds(List<Ad> ads) {
@@ -63,7 +64,7 @@ public class UpdateService {
 
             if (updatedAd.getRemoved()) {
                 ad.setRemoved(true);
-                log.warn("Ad has been removed: {}", ad.getShortenedLink());
+                log.warn("Ad has been removed from website: {}", ad.getShortenedLink());
             } else {
                 ad.setPrice(updatedAd.getPrice());
                 ad.setLastModified(updatedAd.getLastModified());
@@ -74,7 +75,7 @@ public class UpdateService {
         return ads;
     }
 
-    private String getUpdateRangeForCityCentre() {
+    private String getRangeForCityCentre() {
         return String.format(
             "%s!%s%d:%s%d",
             dallConfiguration.getCityCentreSheetName(),
@@ -85,7 +86,7 @@ public class UpdateService {
         );
     }
 
-    private String getUpdateRangeForSuburb() {
+    private String getRangeForSuburb() {
         return String.format(
             "%s!%s%d:%s%d",
             dallConfiguration.getSuburbSheetName(),
@@ -97,29 +98,11 @@ public class UpdateService {
     }
 
     private List<List<Object>> getLinesFromCityCentre() {
-        String range = String.format(
-            "%s!%s%d:%s%d",
-            dallConfiguration.getCityCentreSheetName(),
-            dallConfiguration.getStartingColumnCityCentre(),
-            dallConfiguration.getStartingCellCityCentre(),
-            dallConfiguration.getEndingColumnCityCentre(),
-            dallConfiguration.getEndingCellCityCentre()
-        );
-
-        return getLines(range);
+        return getLines(getRangeForCityCentre());
     }
 
     private List<List<Object>> getLinesFromSuburb() {
-        String range = String.format(
-            "%s!%s%d:%s%d",
-            dallConfiguration.getSuburbSheetName(),
-            dallConfiguration.getStartingColumnSuburb(),
-            dallConfiguration.getStartingCellSuburb(),
-            dallConfiguration.getEndingColumnSuburb(),
-            dallConfiguration.getEndingCellSuburb()
-        );
-
-        return getLines(range);
+        return getLines(getRangeForSuburb());
     }
 
     @SneakyThrows
@@ -133,29 +116,25 @@ public class UpdateService {
     }
 
     private List<Ad> parseRawLines(List<List<Object>> rawLines) {
-        List<Ad> ads = new ArrayList<>();
-
-        for (List<Object> rawLine : rawLines) {
-            if (!rawLine.get(0).toString().equals("")) {
-                ads.add(
-                    new Ad(
-                        rawLine.get(0).toString(),
-                        rawLine.get(1).toString(),
-                        rawLine.get(2).toString(),
-                        rawLine.get(3).toString(),
-                        rawLine.get(4).toString(),
-                        rawLine.get(5).toString(),
-                        rawLine.get(6).toString(),
-                        rawLine.get(7).toString(),
-                        rawLine.get(8).toString(),
-                        rawLine.get(9).toString(),
-                        Boolean.parseBoolean(rawLine.get(10).toString())
-                    )
-                );
-            }
-        }
-
-        return ads;
+        return rawLines
+            .stream()
+            .filter(rawLine -> !rawLine.get(0).toString().isEmpty())
+            .map(rawLine ->
+                new Ad(
+                    rawLine.get(0).toString(),
+                    rawLine.get(1).toString(),
+                    rawLine.get(2).toString(),
+                    rawLine.get(3).toString(),
+                    rawLine.get(4).toString(),
+                    rawLine.get(5).toString(),
+                    rawLine.get(6).toString(),
+                    rawLine.get(7).toString(),
+                    rawLine.get(8).toString(),
+                    rawLine.get(9).toString(),
+                    Boolean.parseBoolean(rawLine.get(10).toString())
+                )
+            )
+            .collect(Collectors.toList());
     }
 
     private List<List<Object>> serializeAds(List<Ad> ads) {
