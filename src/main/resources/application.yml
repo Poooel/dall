@@ -6,6 +6,14 @@ google:
     spreadsheetId: 15UKny9G821-Z6b5sVuz7A-VnNtQcrT68vaZQeV58fPk
     scopes:
       - https://www.googleapis.com/auth/spreadsheets
+  maps:
+    key: google_distance_matrix_api_key
+    address: address
+    latitude: 0.0
+    longitude: 0.0
+    mode: walking
+    units: metric
+
 
 dall:
   city-centre-districts:
