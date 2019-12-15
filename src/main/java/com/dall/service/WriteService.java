@@ -82,6 +82,7 @@ public class WriteService {
                 ad.getBathrooms(),
                 ad.getLastModified(),
                 ad.getViews(),
+                ad.getDistance(),
                 ad.getPrice(),
                 ad.getPer(),
                 ad.getDateAdded()

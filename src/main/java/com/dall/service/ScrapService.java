@@ -2,6 +2,7 @@ package com.dall.service;
 
 import com.dall.entity.Ad;
 import com.google.common.collect.ImmutableMap;
+import com.google.maps.model.LatLng;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,16 +18,18 @@ import java.util.regex.Pattern;
 @Slf4j
 public class ScrapService {
     private final DateService dateService;
+    private final MapsService mapsService;
 
     @Autowired
-    public ScrapService(DateService dateService) {
+    public ScrapService(DateService dateService, MapsService mapsService) {
         this.dateService = dateService;
+        this.mapsService = mapsService;
     }
 
     public ScrapedAd load(String link) {
         try {
             Document document = Jsoup.connect(link).get();
-            return new ScrapedAd(document, dateService);
+            return new ScrapedAd(document, dateService, mapsService);
         } catch (IOException e) {
             log.error("Unable to scrap ad.", e);
             return null;
@@ -35,23 +38,25 @@ public class ScrapService {
 
     static class ScrapedAd {
         private static final Map<String, String> transformerLeaseTime = ImmutableMap.of(
-            "Minimum 1 Year", "1 Year",
-            "Minimum 6 Months", "6 Months",
-            "Minimum 3 Months", "3 Months",
-            "No Minimum", "No minimum"
+                "Minimum 1 Year", "1 Year",
+                "Minimum 6 Months", "6 Months",
+                "Minimum 3 Months", "3 Months",
+                "No Minimum", "No minimum"
         );
 
         private static final Map<String, String> transformerPer = ImmutableMap.of(
-            "Per month", "Month",
-            "Per week", "Week"
+                "Per month", "Month",
+                "Per week", "Week"
         );
 
         private final Document document;
         private final DateService dateService;
+        private final MapsService mapsService;
 
-        private ScrapedAd(Document document, DateService dateService) {
+        private ScrapedAd(Document document, DateService dateService, MapsService mapsService) {
             this.document = document;
             this.dateService = dateService;
+            this.mapsService = mapsService;
         }
 
         public String getShortenedLink() {
@@ -98,9 +103,9 @@ public class ScrapService {
         public String getLastModified() {
             String descriptionExtras = document.select("#description .description_extras").first().html();
             String lastModified = descriptionExtras
-                .split("<h3>Date Entered/Renewed:</h3>")[1]
-                .split("<h3>Property Views:</h3>")[0]
-                .split(" ")[0];
+                    .split("<h3>Date Entered/Renewed:</h3>")[1]
+                    .split("<h3>Property Views:</h3>")[0]
+                    .split(" ")[0];
 
             return dateService.format(lastModified);
         }
@@ -109,9 +114,22 @@ public class ScrapService {
             String descriptionExtras = document.select("#description .description_extras").first().html();
 
             return descriptionExtras
-                .split("<h3>Property Views:</h3>")[1]
-                .replace(",", "")
-                .trim();
+                    .split("<h3>Property Views:</h3>")[1]
+                    .replace(",", "")
+                    .trim();
+        }
+
+        public String getDistance() {
+            String link = document.select("#LaunchStreet").attr("href");
+            Pattern regex = Pattern.compile("(-?\\d+.\\d+),(-?\\d+.\\d+)");
+            Matcher matcher = regex.matcher(link);
+            if (matcher.find()) {
+                LatLng adPosition = new LatLng(
+                        Double.parseDouble(matcher.group(1)),
+                        Double.parseDouble(matcher.group(2)));
+                return String.valueOf(mapsService.computeDistance(adPosition));
+            }
+            return "";
         }
 
         public String getPrice() {
@@ -129,22 +147,23 @@ public class ScrapService {
 
         public boolean getRemoved() {
             return !document.select("#agreed").isEmpty() ||
-                !document.select(".errorMessages").isEmpty();
+                    !document.select(".errorMessages").isEmpty();
         }
 
         public Ad transform() {
             return new Ad(
-                getShortenedLink(),
-                getAddress(),
-                getDistrict(),
-                getLeaseTime(),
-                getNumberOfBathrooms(),
-                getLastModified(),
-                getViews(),
-                getPrice(),
-                getPer(),
-                dateService.getNow(),
-                getRemoved()
+                    getShortenedLink(),
+                    getAddress(),
+                    getDistrict(),
+                    getLeaseTime(),
+                    getNumberOfBathrooms(),
+                    getLastModified(),
+                    getViews(),
+                    getDistance(),
+                    getPrice(),
+                    getPer(),
+                    dateService.getNow(),
+                    getRemoved()
             );
         }
     }

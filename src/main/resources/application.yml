@@ -3,16 +3,15 @@ google:
     applicationName: dall
     tokenDirectoryPath: tokens
     credentialsFilePath: /credentials.json
-    spreadsheetId: 15UKny9G821-Z6b5sVuz7A-VnNtQcrT68vaZQeV58fPk
+    spreadsheetId: 1fian1YCpdFKGK8Raqgr3MRVt24UDZuz4IwR_tW8WtXQ
     scopes:
       - https://www.googleapis.com/auth/spreadsheets
   maps:
-    key: google_distance_matrix_api_key
-    address: address
-    latitude: 0.0
-    longitude: 0.0
-    mode: walking
-    units: metric
+    key: key
+    latitude: lat
+    longitude: lng
+    mode: WALKING
+    units: METRIC
 
 
 dall:

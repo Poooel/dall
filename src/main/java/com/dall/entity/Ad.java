@@ -12,12 +12,12 @@ public class Ad {
     private String shortenedLink;
 
     /**
-     * The address of the appartment
+     * The address of the apartment
      */
     private String address;
 
     /**
-     * The district of the appartment
+     * The district of the apartment
      */
     private String district;
 
@@ -27,7 +27,7 @@ public class Ad {
     private String leaseTime;
 
     /**
-     * Number of bathrooms in the appartment
+     * Number of bathrooms in the apartment
      */
     private String bathrooms;
 
@@ -40,6 +40,11 @@ public class Ad {
      * The number of views the ad has
      */
     private String views;
+
+    /**
+     * The distance between the ad address and the work address
+     */
+    private String distance;
 
     /**
      * The price to rent the appartment

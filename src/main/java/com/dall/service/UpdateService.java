@@ -133,7 +133,8 @@ public class UpdateService {
                     rawLine.get(7).toString(),
                     rawLine.get(8).toString(),
                     rawLine.get(9).toString(),
-                    Boolean.parseBoolean(rawLine.get(10).toString())
+                    rawLine.get(10).toString(),
+                    Boolean.parseBoolean(rawLine.get(11).toString())
                 )
             )
             .collect(Collectors.toList());
@@ -152,6 +153,7 @@ public class UpdateService {
                     ad.getBathrooms(),
                     ad.getLastModified(),
                     ad.getViews(),
+                    ad.getDistance(),
                     ad.getPrice(),
                     ad.getPer(),
                     ad.getDateAdded(),
