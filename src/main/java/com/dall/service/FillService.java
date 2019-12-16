@@ -26,15 +26,13 @@ public class FillService {
     private final DuplicateService duplicateService;
 
     @Autowired
-    public FillService(
-        Sheets sheets,
+    public FillService(Sheets sheets,
         GoogleCredentialsConfiguration googleCredentialsConfiguration,
         ScrapService scrapService,
         WriteService writeService,
         DallConfiguration dallConfiguration,
         DeleteService deleteService,
-        DuplicateService duplicateService
-    ) {
+        DuplicateService duplicateService) {
         this.spreadsheet = sheets.spreadsheets();
         this.googleCredentialsConfiguration = googleCredentialsConfiguration;
         this.scrapService = scrapService;
@@ -47,17 +45,17 @@ public class FillService {
     public void fillSpreadSheet() {
         List<String> links = getLinksToScrap();
 
-        if (links.isEmpty()) {
+        if(links.isEmpty()) {
             log.error("No links to scrap.");
         } else {
             int adCounter = 0;
 
-            for (String link : links) {
+            for(String link : links) {
                 ScrapService.ScrapedAd scrapedAd = scrapService.load(link);
 
-                if (scrapedAd.getRemoved()) {
+                if(scrapedAd.getRemoved()) {
                     log.error("Ad has been removed from website: {}.", link);
-                } else if (duplicateService.exists(scrapedAd.getShortenedLink())) {
+                } else if(duplicateService.exists(scrapedAd.getShortenedLink())) {
                     log.error("Duplicate ad: {}.", link);
                 } else {
                     writeService.writeToSheet(scrapedAd.transform());
@@ -73,12 +71,11 @@ public class FillService {
 
     @SneakyThrows
     private List<String> getLinksToScrap() {
-        ValueRange result = spreadsheet
-            .values()
+        ValueRange result = spreadsheet.values()
             .get(googleCredentialsConfiguration.getSpreadsheetId(), dallConfiguration.getLinksRange())
             .execute();
 
-        if (result.getValues() == null) {
+        if(result.getValues() == null) {
             return new ArrayList<>();
         } else {
             return result.getValues()

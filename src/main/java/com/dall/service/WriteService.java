@@ -21,12 +21,10 @@ public class WriteService {
     private final DallConfiguration dallConfiguration;
 
     @Autowired
-    public WriteService(
-        Sheets sheets,
+    public WriteService(Sheets sheets,
         GoogleCredentialsConfiguration googleCredentialsConfiguration,
         RangeService rangeService,
-        DallConfiguration dallConfiguration
-    ) {
+        DallConfiguration dallConfiguration) {
         this.spreadsheet = sheets.spreadsheets();
         this.googleCredentialsConfiguration = googleCredentialsConfiguration;
         this.rangeService = rangeService;
@@ -36,7 +34,7 @@ public class WriteService {
     void writeToSheet(Ad ad) {
         int districtNumber = Integer.parseInt(ad.getDistrict().split(" ")[1]);
 
-        if (dallConfiguration.getCityCentreDistricts().contains(districtNumber)) {
+        if(dallConfiguration.getCityCentreDistricts().contains(districtNumber)) {
             writeToCityCentreSheet(ad);
         } else {
             writeToSuburbSheet(ad);
@@ -73,19 +71,17 @@ public class WriteService {
     }
 
     private List<List<Object>> createBodyFromAd(Ad ad) {
-        return Collections.singletonList(
-            Arrays.asList(
-                ad.getShortenedLink(),
-                ad.getAddress(),
-                ad.getDistrict(),
-                ad.getLeaseTime(),
-                ad.getBathrooms(),
-                ad.getLastModified(),
-                ad.getViews(),
-                ad.getPrice(),
-                ad.getPer(),
-                ad.getDateAdded()
-            )
-        );
+        return Collections.singletonList(Arrays.asList(ad.getShortenedLink(),
+            ad.getAddress(),
+            ad.getDistrict(),
+            ad.getLeaseTime(),
+            ad.getBathrooms(),
+            ad.getLastModified(),
+            ad.getViews(),
+            ad.getDuration(),
+            ad.getMapsPath(),
+            ad.getPrice(),
+            ad.getPer(),
+            ad.getDateAdded()));
     }
 }

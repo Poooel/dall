@@ -25,6 +25,7 @@ repositories {
 dependencies {
 	// Spring
 	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
@@ -36,6 +37,9 @@ dependencies {
 	compile 'com.google.api-client:google-api-client:1.25.0'
 	compile 'com.google.oauth-client:google-oauth-client-jetty:1.25.0'
 	compile 'com.google.apis:google-api-services-sheets:v4-rev604-1.25.0'
+
+	// Google Maps API
+	implementation 'com.google.maps:google-maps-services:0.10.2'
 
 	// Jsoup
 	compile 'org.jsoup:jsoup:1.12.1'

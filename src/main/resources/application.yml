@@ -6,6 +6,14 @@ google:
     spreadsheetId: 15UKny9G821-Z6b5sVuz7A-VnNtQcrT68vaZQeV58fPk
     scopes:
       - https://www.googleapis.com/auth/spreadsheets
+  maps:
+    key: key
+    latitude: 53.346718
+    longitude: -6.259389
+    units: METRIC
+    city_travel_mode: WALKING
+    suburb_travel_mode: TRANSIT
+
 
 dall:
   city-centre-districts:
