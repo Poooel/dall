@@ -15,79 +15,73 @@ import java.util.List;
 
 @Service
 public class WriteService {
-	private final Sheets.Spreadsheets spreadsheet;
-	private final GoogleCredentialsConfiguration googleCredentialsConfiguration;
-	private final RangeService rangeService;
-	private final DallConfiguration dallConfiguration;
+    private final Sheets.Spreadsheets spreadsheet;
+    private final GoogleCredentialsConfiguration googleCredentialsConfiguration;
+    private final RangeService rangeService;
+    private final DallConfiguration dallConfiguration;
 
-	@Autowired
-	public WriteService(
-		Sheets sheets,
-		GoogleCredentialsConfiguration googleCredentialsConfiguration,
-		RangeService rangeService,
-		DallConfiguration dallConfiguration
-	) {
-		this.spreadsheet = sheets.spreadsheets();
-		this.googleCredentialsConfiguration = googleCredentialsConfiguration;
-		this.rangeService = rangeService;
-		this.dallConfiguration = dallConfiguration;
-	}
+    @Autowired
+    public WriteService(Sheets sheets,
+        GoogleCredentialsConfiguration googleCredentialsConfiguration,
+        RangeService rangeService,
+        DallConfiguration dallConfiguration) {
+        this.spreadsheet = sheets.spreadsheets();
+        this.googleCredentialsConfiguration = googleCredentialsConfiguration;
+        this.rangeService = rangeService;
+        this.dallConfiguration = dallConfiguration;
+    }
 
-	void writeToSheet(Ad ad) {
-		int districtNumber = Integer.parseInt(ad.getDistrict().split(" ")[1]);
+    void writeToSheet(Ad ad) {
+        int districtNumber = Integer.parseInt(ad.getDistrict().split(" ")[1]);
 
-		if(dallConfiguration.getCityCentreDistricts().contains(districtNumber)) {
-			writeToCityCentreSheet(ad);
-		} else {
-			writeToSuburbSheet(ad);
-		}
-	}
+        if(dallConfiguration.getCityCentreDistricts().contains(districtNumber)) {
+            writeToCityCentreSheet(ad);
+        } else {
+            writeToSuburbSheet(ad);
+        }
+    }
 
-	@SneakyThrows
-	public void rawWriteToSheet(List<List<Object>> body, String range) {
-		ValueRange valueRange = new ValueRange().setValues(body);
+    @SneakyThrows
+    public void rawWriteToSheet(List<List<Object>> body, String range) {
+        ValueRange valueRange = new ValueRange().setValues(body);
 
-		spreadsheet.values()
-			.update(googleCredentialsConfiguration.getSpreadsheetId(), range, valueRange)
-			.setValueInputOption("USER_ENTERED")
-			.execute();
-	}
+        spreadsheet.values()
+            .update(googleCredentialsConfiguration.getSpreadsheetId(), range, valueRange)
+            .setValueInputOption("USER_ENTERED")
+            .execute();
+    }
 
-	private void writeToCityCentreSheet(Ad ad) {
-		write(ad, rangeService.getWritingRangeForCityCentre());
-	}
+    private void writeToCityCentreSheet(Ad ad) {
+        write(ad, rangeService.getWritingRangeForCityCentre());
+    }
 
-	private void writeToSuburbSheet(Ad ad) {
-		write(ad, rangeService.getWritingRangeForSuburb());
-	}
+    private void writeToSuburbSheet(Ad ad) {
+        write(ad, rangeService.getWritingRangeForSuburb());
+    }
 
-	@SneakyThrows
-	private void write(Ad ad, String range) {
-		List<List<Object>> body = createBodyFromAd(ad);
-		ValueRange valueRange = new ValueRange().setValues(body);
+    @SneakyThrows
+    private void write(Ad ad, String range) {
+        List<List<Object>> body = createBodyFromAd(ad);
+        ValueRange valueRange = new ValueRange().setValues(body);
 
-		spreadsheet.values()
-			.update(googleCredentialsConfiguration.getSpreadsheetId(), range, valueRange)
-			.setValueInputOption("USER_ENTERED")
-			.execute();
-	}
+        spreadsheet.values()
+            .update(googleCredentialsConfiguration.getSpreadsheetId(), range, valueRange)
+            .setValueInputOption("USER_ENTERED")
+            .execute();
+    }
 
-	private List<List<Object>> createBodyFromAd(Ad ad) {
-		return Collections.singletonList(
-			Arrays.asList(
-				ad.getShortenedLink(),
-				ad.getAddress(),
-				ad.getDistrict(),
-				ad.getLeaseTime(),
-				ad.getBathrooms(),
-				ad.getLastModified(),
-				ad.getViews(),
-				ad.getDuration(),
-				ad.getMapsPath(),
-				ad.getPrice(),
-				ad.getPer(),
-				ad.getDateAdded()
-			)
-		);
-	}
+    private List<List<Object>> createBodyFromAd(Ad ad) {
+        return Collections.singletonList(Arrays.asList(ad.getShortenedLink(),
+            ad.getAddress(),
+            ad.getDistrict(),
+            ad.getLeaseTime(),
+            ad.getBathrooms(),
+            ad.getLastModified(),
+            ad.getViews(),
+            ad.getDuration(),
+            ad.getMapsPath(),
+            ad.getPrice(),
+            ad.getPer(),
+            ad.getDateAdded()));
+    }
 }
