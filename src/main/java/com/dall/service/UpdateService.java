@@ -124,17 +124,18 @@ public class UpdateService {
             .map(rawLine ->
                 new Ad(
                     rawLine.get(0).toString(),
-                    rawLine.get(1).toString(),
-                    rawLine.get(2).toString(),
-                    rawLine.get(3).toString(),
-                    rawLine.get(4).toString(),
-                    rawLine.get(5).toString(),
-                    rawLine.get(6).toString(),
-                    rawLine.get(7).toString(),
-                    rawLine.get(8).toString(),
-                    rawLine.get(9).toString(),
-                    rawLine.get(10).toString(),
-                    Boolean.parseBoolean(rawLine.get(11).toString())
+                        rawLine.get(1).toString(),
+                        rawLine.get(2).toString(),
+                        rawLine.get(3).toString(),
+                        rawLine.get(4).toString(),
+                        rawLine.get(5).toString(),
+                        rawLine.get(6).toString(),
+                        rawLine.get(7).toString(),
+                        rawLine.get(8).toString(),
+                        rawLine.get(9).toString(),
+                        rawLine.get(10).toString(),
+                        rawLine.get(11).toString(),
+                        Boolean.parseBoolean(rawLine.get(12).toString())
                 )
             )
             .collect(Collectors.toList());
@@ -146,18 +147,18 @@ public class UpdateService {
         for (Ad ad : ads) {
             serializedAds.add(
                 Arrays.asList(
-                    ad.getShortenedLink(),
-                    ad.getAddress(),
-                    ad.getDistrict(),
-                    ad.getLeaseTime(),
-                    ad.getBathrooms(),
-                    ad.getLastModified(),
-                    ad.getViews(),
-                    ad.getDistance(),
-                    ad.getPrice(),
-                    ad.getPer(),
-                    ad.getDateAdded(),
-                    ad.isRemoved()
+                        ad.getShortenedLink(),
+                        ad.getAddress(),
+                        ad.getDistrict(),
+                        ad.getLeaseTime(),
+                        ad.getBathrooms(),
+                        ad.getLastModified(),
+                        ad.getViews(),
+                        ad.getDuration(),
+                        ad.getPrice(),
+                        ad.getPer(),
+                        ad.getDateAdded(),
+                        ad.isRemoved()
                 )
             );
         }

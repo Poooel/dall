@@ -44,10 +44,15 @@ public class Ad {
     /**
      * The distance between the ad address and the work address
      */
-    private String distance;
+    private String duration;
 
     /**
-     * The price to rent the appartment
+     * The path between the ad address and the work address
+     */
+    private String mapsPath;
+
+    /**
+     * The price to rent the apartment
      */
     private String price;
 

@@ -1,5 +1,6 @@
 package com.dall.service;
 
+import com.dall.config.DallConfiguration;
 import com.dall.entity.Ad;
 import com.google.common.collect.ImmutableMap;
 import com.google.maps.model.LatLng;
@@ -19,17 +20,19 @@ import java.util.regex.Pattern;
 public class ScrapService {
     private final DateService dateService;
     private final MapsService mapsService;
+    private final DallConfiguration dallConfiguration;
 
     @Autowired
-    public ScrapService(DateService dateService, MapsService mapsService) {
+    public ScrapService(DateService dateService, MapsService mapsService, DallConfiguration dallConfiguration) {
         this.dateService = dateService;
         this.mapsService = mapsService;
+        this.dallConfiguration = dallConfiguration;
     }
 
     public ScrapedAd load(String link) {
         try {
             Document document = Jsoup.connect(link).get();
-            return new ScrapedAd(document, dateService, mapsService);
+            return new ScrapedAd(document, dateService, mapsService, dallConfiguration);
         } catch (IOException e) {
             log.error("Unable to scrap ad.", e);
             return null;
@@ -52,11 +55,13 @@ public class ScrapService {
         private final Document document;
         private final DateService dateService;
         private final MapsService mapsService;
+        private final DallConfiguration dallConfiguration;
 
-        private ScrapedAd(Document document, DateService dateService, MapsService mapsService) {
+        private ScrapedAd(Document document, DateService dateService, MapsService mapsService, DallConfiguration dallConfiguration) {
             this.document = document;
             this.dateService = dateService;
             this.mapsService = mapsService;
+            this.dallConfiguration = dallConfiguration;
         }
 
         public String getShortenedLink() {
@@ -119,17 +124,16 @@ public class ScrapService {
                     .trim();
         }
 
-        public String getDistance() {
+        public LatLng getCoordinates() {
             String link = document.select("#LaunchStreet").attr("href");
             Pattern regex = Pattern.compile("(-?\\d+.\\d+),(-?\\d+.\\d+)");
             Matcher matcher = regex.matcher(link);
+            LatLng coordinates = new LatLng();
             if (matcher.find()) {
-                LatLng adPosition = new LatLng(
-                        Double.parseDouble(matcher.group(1)),
-                        Double.parseDouble(matcher.group(2)));
-                return String.valueOf(mapsService.computeDistance(adPosition));
+                coordinates.lat = Double.parseDouble(matcher.group(1));
+                coordinates.lng = Double.parseDouble(matcher.group(2));
             }
-            return "";
+            return coordinates;
         }
 
         public String getPrice() {
@@ -151,20 +155,29 @@ public class ScrapService {
         }
 
         public Ad transform() {
+            LatLng coordinates = getCoordinates();
+            String district = getDistrict();
+            boolean isInCityCentre = isInCityCentre(district);
             return new Ad(
                     getShortenedLink(),
                     getAddress(),
-                    getDistrict(),
+                    district,
                     getLeaseTime(),
                     getNumberOfBathrooms(),
                     getLastModified(),
                     getViews(),
-                    getDistance(),
+                    this.mapsService.computeDuration(coordinates, isInCityCentre),
+                    this.mapsService.buildMapsURL(coordinates, isInCityCentre),
                     getPrice(),
                     getPer(),
                     dateService.getNow(),
                     getRemoved()
             );
+        }
+
+        private boolean isInCityCentre(String district) {
+            int districtNumber = Integer.parseInt(district.split(" ")[1]);
+            return dallConfiguration.getCityCentreDistricts().contains(districtNumber);
         }
     }
 }

@@ -75,17 +75,18 @@ public class WriteService {
     private List<List<Object>> createBodyFromAd(Ad ad) {
         return Collections.singletonList(
             Arrays.asList(
-                ad.getShortenedLink(),
-                ad.getAddress(),
-                ad.getDistrict(),
-                ad.getLeaseTime(),
-                ad.getBathrooms(),
-                ad.getLastModified(),
-                ad.getViews(),
-                ad.getDistance(),
-                ad.getPrice(),
-                ad.getPer(),
-                ad.getDateAdded()
+                    ad.getShortenedLink(),
+                    ad.getAddress(),
+                    ad.getDistrict(),
+                    ad.getLeaseTime(),
+                    ad.getBathrooms(),
+                    ad.getLastModified(),
+                    ad.getViews(),
+                    ad.getDuration(),
+                    ad.getMapsPath(),
+                    ad.getPrice(),
+                    ad.getPer(),
+                    ad.getDateAdded()
             )
         );
     }

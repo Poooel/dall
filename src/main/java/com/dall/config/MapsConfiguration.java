@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "google.maps")
 public class MapsConfiguration {
     private String key;
-    private String address;
     private double latitude;
     private double longitude;
-    private TravelMode mode;
+    private TravelMode cityTravelMode;
+    private TravelMode suburbTravelMode;
     private Unit units;
 }
