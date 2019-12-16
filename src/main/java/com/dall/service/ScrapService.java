@@ -40,17 +40,9 @@ public class ScrapService {
 	}
 
 	static class ScrapedAd {
-		private static final Map<String, String> transformerLeaseTime = ImmutableMap.of(
-			"Minimum 1 Year", "1 Year",
-			"Minimum 6 Months", "6 Months",
-			"Minimum 3 Months", "3 Months",
-			"No Minimum", "No minimum"
-		);
+		private static final Map<String, String> transformerLeaseTime = ImmutableMap.of("Minimum 1 Year", "1 Year", "Minimum 6 Months", "6 Months", "Minimum 3 Months", "3 Months", "No Minimum", "No minimum");
 
-		private static final Map<String, String> transformerPer = ImmutableMap.of(
-			"Per month", "Month",
-			"Per week", "Week"
-		);
+		private static final Map<String, String> transformerPer = ImmutableMap.of("Per month", "Month", "Per week", "Week");
 
 		private final Document document;
 		private final DateService dateService;
@@ -107,10 +99,7 @@ public class ScrapService {
 
 		public String getLastModified() {
 			String descriptionExtras = document.select("#description .description_extras").first().html();
-			String lastModified = descriptionExtras
-				.split("<h3>Date Entered/Renewed:</h3>")[1]
-				.split("<h3>Property Views:</h3>")[0]
-				.split(" ")[0];
+			String lastModified = descriptionExtras.split("<h3>Date Entered/Renewed:</h3>")[1].split("<h3>Property Views:</h3>")[0].split(" ")[0];
 
 			return dateService.format(lastModified);
 		}
@@ -118,10 +107,7 @@ public class ScrapService {
 		public String getViews() {
 			String descriptionExtras = document.select("#description .description_extras").first().html();
 
-			return descriptionExtras
-				.split("<h3>Property Views:</h3>")[1]
-				.replace(",", "")
-				.trim();
+			return descriptionExtras.split("<h3>Property Views:</h3>")[1].replace(",", "").trim();
 		}
 
 		public LatLng getCoordinates() {
@@ -150,29 +136,14 @@ public class ScrapService {
 		}
 
 		public boolean getRemoved() {
-			return !document.select("#agreed").isEmpty() ||
-				!document.select(".errorMessages").isEmpty();
+			return !document.select("#agreed").isEmpty() || !document.select(".errorMessages").isEmpty();
 		}
 
 		public Ad transform() {
 			LatLng coordinates = getCoordinates();
 			String district = getDistrict();
 			boolean isInCityCentre = isInCityCentre(district);
-			return new Ad(
-				getShortenedLink(),
-				getAddress(),
-				district,
-				getLeaseTime(),
-				getNumberOfBathrooms(),
-				getLastModified(),
-				getViews(),
-				this.mapsService.computeDuration(coordinates, isInCityCentre),
-				this.mapsService.buildMapsURL(coordinates, isInCityCentre),
-				getPrice(),
-				getPer(),
-				dateService.getNow(),
-				getRemoved()
-			);
+			return new Ad(getShortenedLink(), getAddress(), district, getLeaseTime(), getNumberOfBathrooms(), getLastModified(), getViews(), this.mapsService.computeDuration(coordinates, isInCityCentre), this.mapsService.buildMapsURL(coordinates, isInCityCentre), getPrice(), getPer(), dateService.getNow(), getRemoved());
 		}
 
 		private boolean isInCityCentre(String district) {
