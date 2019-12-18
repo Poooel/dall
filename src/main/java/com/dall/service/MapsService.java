@@ -6,6 +6,7 @@ import com.google.maps.DistanceMatrixApiRequest;
 import com.google.maps.GeoApiContext;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.DistanceMatrix;
+import com.google.maps.model.DistanceMatrixElement;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.TravelMode;
 import lombok.extern.slf4j.Slf4j;
@@ -53,16 +54,29 @@ public class MapsService {
 
     public String computeDuration(LatLng adCoordinates, boolean isInCityCentre) {
         DistanceMatrixApiRequest request = DistanceMatrixApi.newRequest(this.context);
+
         try {
             DistanceMatrix result = request.origins(this.baseCoordinates)
                 .destinations(adCoordinates)
                 .mode(this.getTravelMode(isInCityCentre))
                 .units(this.mapsConfiguration.getUnits())
                 .await();
-            return result.rows[0].elements[0].duration.humanReadable;
-        } catch(InterruptedException | ApiException | IOException e) {
-            e.printStackTrace();
+
+            DistanceMatrixElement pathInfos = result.rows[0].elements[0];
+            if(pathInfos.duration != null) {
+                return result.rows[0].elements[0].duration.humanReadable;
+            } else {
+                throw new MapsException("No path available from this address");
+            }
+        } catch(InterruptedException | ApiException | IOException | MapsException e) {
+            log.error(e.getMessage());
             return "0 min";
         }
+    }
+}
+
+class MapsException extends RuntimeException {
+    public MapsException(String errorMessage) {
+        super(errorMessage);
     }
 }

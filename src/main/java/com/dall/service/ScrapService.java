@@ -157,6 +157,8 @@ public class ScrapService {
             LatLng coordinates = getCoordinates();
             String district = getDistrict();
             boolean isInCityCentre = isInCityCentre(district);
+            String duration = this.mapsService.computeDuration(coordinates, isInCityCentre);
+
             return new Ad(getShortenedLink(),
                 getAddress(),
                 district,
@@ -164,8 +166,9 @@ public class ScrapService {
                 getNumberOfBathrooms(),
                 getLastModified(),
                 getViews(),
-                this.mapsService.computeDuration(coordinates, isInCityCentre),
-                this.mapsService.buildMapsURL(coordinates, isInCityCentre),
+                duration,
+                !duration.equals("0 min") ? this.mapsService.buildMapsURL(coordinates,
+                    isInCityCentre) : "No path available",
                 getPrice(),
                 getPer(),
                 dateService.getNow(),

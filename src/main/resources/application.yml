@@ -36,8 +36,8 @@ dall:
   ending-cell-suburb: 103
   starting-column-city-centre: B
   starting-column-suburb: B
-  ending-column-city-centre: L
-  ending-column-suburb: L
+  ending-column-city-centre: N
+  ending-column-suburb: N
   city-centre-sheet-name: Centre
   suburb-sheet-name: Banlieue
 
