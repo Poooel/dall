@@ -38,23 +38,15 @@ public class RangeService {
         ValueRange result = this.spreadsheet
             .values()
             .get(googleCredentialsConfiguration.getSpreadsheetId(),
-                String.format(
-                    "%s!%s%d:%s1000",
+                String.format("%s!%s%d:%s1000",
                     sheet,
                     dallConfiguration.getStartingColumnCityCentre(),
                     dallConfiguration.getStartingCellCityCentre(),
-                    dallConfiguration.getStartingColumnCityCentre()
-                )
-            )
-            .execute();
+                    dallConfiguration.getStartingColumnCityCentre())).execute();
 
-        int finalRangeValue = dallConfiguration.getStartingCellCityCentre() + result.getValues().size();
+        int resultRange = result.getValues() != null ? result.getValues().size() : 0;
+        int finalRangeValue = dallConfiguration.getStartingCellCityCentre() + resultRange;
 
-        return String.format(
-            "%s!%s%d",
-            sheet,
-            dallConfiguration.getStartingColumnCityCentre(),
-            finalRangeValue
-        );
+        return String.format("%s!%s%d", sheet, dallConfiguration.getStartingColumnCityCentre(), finalRangeValue);
     }
 }
