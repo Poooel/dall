@@ -52,7 +52,7 @@ public class MapsService {
         return uriComponents.encode().toUriString();
     }
 
-    public String computeDuration(LatLng adCoordinates, boolean isInCityCentre) {
+    public long computeDuration(LatLng adCoordinates, boolean isInCityCentre) {
         DistanceMatrixApiRequest request = DistanceMatrixApi.newRequest(this.context);
 
         try {
@@ -64,13 +64,13 @@ public class MapsService {
 
             DistanceMatrixElement pathInfos = result.rows[0].elements[0];
             if(pathInfos.duration != null) {
-                return result.rows[0].elements[0].duration.humanReadable;
+                return result.rows[0].elements[0].duration.inSeconds / 60;
             } else {
                 throw new MapsException("No path available from this address");
             }
         } catch(InterruptedException | ApiException | IOException | MapsException e) {
             log.error(e.getMessage());
-            return "0 min";
+            return 0;
         }
     }
 }
