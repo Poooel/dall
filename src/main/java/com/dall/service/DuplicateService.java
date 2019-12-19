@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -55,26 +54,17 @@ public class DuplicateService {
                     100))
             .execute();
 
-        return streamToSet(valueRangesToStream(resultFromCityCentre, resultFromSuburb));
+        return Stream.concat(
+            valueRangeToStream(resultFromCityCentre),
+            valueRangeToStream(resultFromSuburb)
+        ).
+            flatMap(Collection::stream)
+            .map(Object::toString)
+            .collect(Collectors.toSet());
     }
 
-    private Stream<List<Object>> valueRangesToStream(ValueRange first, ValueRange second) {
-        if(first.getValues() != null && second.getValues() != null) {
-            return Stream.concat(first.getValues().stream(), second.getValues().stream());
-        } else if(first.getValues() != null) {
-            return first.getValues().stream();
-        } else if(second.getValues() != null) {
-            return second.getValues().stream();
-        } else {
-            return null;
-        }
-    }
-
-    private Set<String> streamToSet(Stream<List<Object>> stream) {
-        if(stream != null) {
-            return stream.flatMap(Collection::stream).map(Object::toString).collect(Collectors.toSet());
-        }
-        return new HashSet<>();
+    private Stream<List<Object>> valueRangeToStream(ValueRange valueRange) {
+        return valueRange.getValues() == null ? Stream.empty() : valueRange.getValues().stream();
     }
 
     public boolean exists(String link) {
