@@ -22,9 +22,11 @@ public class DuplicateService {
     private final DallConfiguration dallConfiguration;
 
     @Autowired
-    public DuplicateService(Sheets sheets,
+    public DuplicateService(
+        Sheets sheets,
         GoogleCredentialsConfiguration googleCredentialsConfiguration,
-        DallConfiguration dallConfiguration) {
+        DallConfiguration dallConfiguration
+    ) {
         this.spreadsheet = sheets.spreadsheets();
         this.googleCredentialsConfiguration = googleCredentialsConfiguration;
         this.dallConfiguration = dallConfiguration;

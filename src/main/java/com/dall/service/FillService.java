@@ -26,13 +26,15 @@ public class FillService {
     private final DuplicateService duplicateService;
 
     @Autowired
-    public FillService(Sheets sheets,
+    public FillService(
+        Sheets sheets,
         GoogleCredentialsConfiguration googleCredentialsConfiguration,
         ScrapService scrapService,
         WriteService writeService,
         DallConfiguration dallConfiguration,
         DeleteService deleteService,
-        DuplicateService duplicateService) {
+        DuplicateService duplicateService
+    ) {
         this.spreadsheet = sheets.spreadsheets();
         this.googleCredentialsConfiguration = googleCredentialsConfiguration;
         this.scrapService = scrapService;
@@ -75,7 +77,7 @@ public class FillService {
             .get(googleCredentialsConfiguration.getSpreadsheetId(), dallConfiguration.getLinksRange())
             .execute();
 
-        if(result.getValues() == null) {
+        if (result.getValues() == null) {
             return new ArrayList<>();
         } else {
             return result.getValues()
