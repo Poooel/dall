@@ -4,15 +4,13 @@ import com.dall.config.DallConfiguration;
 import com.dall.config.GoogleCredentialsConfiguration;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.SneakyThrows;
+import org.springframework.stereotype.Service;
 
 @Service
 public class DuplicateService {
@@ -21,10 +19,11 @@ public class DuplicateService {
     private final GoogleCredentialsConfiguration googleCredentialsConfiguration;
     private final DallConfiguration dallConfiguration;
 
-    @Autowired
-    public DuplicateService(Sheets sheets,
+    DuplicateService(
+        Sheets sheets,
         GoogleCredentialsConfiguration googleCredentialsConfiguration,
-        DallConfiguration dallConfiguration) {
+        DallConfiguration dallConfiguration
+    ) {
         this.spreadsheet = sheets.spreadsheets();
         this.googleCredentialsConfiguration = googleCredentialsConfiguration;
         this.dallConfiguration = dallConfiguration;
@@ -57,8 +56,8 @@ public class DuplicateService {
         return Stream.concat(
             valueRangeToStream(resultFromCityCentre),
             valueRangeToStream(resultFromSuburb)
-        ).
-            flatMap(Collection::stream)
+        )
+            .flatMap(Collection::stream)
             .map(Object::toString)
             .collect(Collectors.toSet());
     }

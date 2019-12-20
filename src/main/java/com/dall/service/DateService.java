@@ -1,16 +1,15 @@
 package com.dall.service;
 
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import org.springframework.stereotype.Service;
 
 @Service
 public class DateService {
     private final DateTimeFormatter dateTimeFormatter;
 
-    public DateService() {
+    DateService() {
         dateTimeFormatter = DateTimeFormatter.ofPattern("d/M/u", Locale.FRANCE);
     }
 

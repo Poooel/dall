@@ -12,22 +12,22 @@ public class Ad {
     private String shortenedLink;
 
     /**
-     * The address of the apartment
+     * The address of the apartment.
      */
     private String address;
 
     /**
-     * The district of the apartment
+     * The district of the apartment.
      */
     private String district;
 
     /**
-     * The minimum lease time possible
+     * The minimum lease time possible.
      */
     private String leaseTime;
 
     /**
-     * Number of bathrooms in the apartment
+     * Number of bathrooms in the apartment.
      */
     private String bathrooms;
 
@@ -37,37 +37,37 @@ public class Ad {
     private String lastModified;
 
     /**
-     * The number of views the ad has
+     * The number of views the ad has.
      */
     private String views;
 
     /**
-     * The distance between the ad address and the work address
+     * The distance between the ad address and the work address.
      */
     private String duration;
 
     /**
-     * The path between the ad address and the work address
+     * The path between the ad address and the work address.
      */
     private String mapsPath;
 
     /**
-     * The price to rent the apartment
+     * The price to rent the apartment.
      */
     private String price;
 
     /**
-     * The price is either per week or per month
+     * The price is either per week or per month.
      */
     private String per;
 
     /**
-     * The date when the ad was added to the Sheets document
+     * The date when the ad was added to the Sheets document.
      */
     private String dateAdded;
 
     /**
-     * Has the ad been removed from the website or the let has been agreed
+     * Has the ad been removed from the website or the let has been agreed.
      */
     private boolean removed;
 }

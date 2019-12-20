@@ -3,14 +3,12 @@ package com.dall.service;
 import com.dall.config.GoogleCredentialsConfiguration;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
@@ -18,8 +16,7 @@ public class DeleteService {
     private final Sheets.Spreadsheets spreadsheet;
     private final GoogleCredentialsConfiguration googleCredentialsConfiguration;
 
-    @Autowired
-    public DeleteService(
+    DeleteService(
         Sheets sheets,
         GoogleCredentialsConfiguration googleCredentialsConfiguration
     ) {

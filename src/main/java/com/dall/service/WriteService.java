@@ -5,13 +5,11 @@ import com.dall.config.GoogleCredentialsConfiguration;
 import com.dall.entity.Ad;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import lombok.SneakyThrows;
+import org.springframework.stereotype.Service;
 
 @Service
 public class WriteService {
@@ -20,11 +18,12 @@ public class WriteService {
     private final RangeService rangeService;
     private final DallConfiguration dallConfiguration;
 
-    @Autowired
-    public WriteService(Sheets sheets,
+    WriteService(
+        Sheets sheets,
         GoogleCredentialsConfiguration googleCredentialsConfiguration,
         RangeService rangeService,
-        DallConfiguration dallConfiguration) {
+        DallConfiguration dallConfiguration
+    ) {
         this.spreadsheet = sheets.spreadsheets();
         this.googleCredentialsConfiguration = googleCredentialsConfiguration;
         this.rangeService = rangeService;
@@ -34,7 +33,7 @@ public class WriteService {
     void writeToSheet(Ad ad) {
         int districtNumber = Integer.parseInt(ad.getDistrict().split(" ")[1]);
 
-        if(dallConfiguration.getCityCentreDistricts().contains(districtNumber)) {
+        if (dallConfiguration.getCityCentreDistricts().contains(districtNumber)) {
             writeToCityCentreSheet(ad);
         } else {
             writeToSuburbSheet(ad);
@@ -42,7 +41,7 @@ public class WriteService {
     }
 
     @SneakyThrows
-    public void rawWriteToSheet(List<List<Object>> body, String range) {
+    void rawWriteToSheet(List<List<Object>> body, String range) {
         ValueRange valueRange = new ValueRange().setValues(body);
 
         spreadsheet.values()

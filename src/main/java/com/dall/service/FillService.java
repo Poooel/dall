@@ -4,15 +4,13 @@ import com.dall.config.DallConfiguration;
 import com.dall.config.GoogleCredentialsConfiguration;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
@@ -25,14 +23,15 @@ public class FillService {
     private final DeleteService deleteService;
     private final DuplicateService duplicateService;
 
-    @Autowired
-    public FillService(Sheets sheets,
+    FillService(
+        Sheets sheets,
         GoogleCredentialsConfiguration googleCredentialsConfiguration,
         ScrapService scrapService,
         WriteService writeService,
         DallConfiguration dallConfiguration,
         DeleteService deleteService,
-        DuplicateService duplicateService) {
+        DuplicateService duplicateService
+    ) {
         this.spreadsheet = sheets.spreadsheets();
         this.googleCredentialsConfiguration = googleCredentialsConfiguration;
         this.scrapService = scrapService;
@@ -42,20 +41,24 @@ public class FillService {
         this.duplicateService = duplicateService;
     }
 
+    /**
+     * Get the links from the Links sheet and follow each one to scrap the ad from daft.ie
+     * and then insert the scraped ad in the corresponding sheet
+     */
     public void fillSpreadSheet() {
         List<String> links = getLinksToScrap();
 
-        if(links.isEmpty()) {
+        if (links.isEmpty()) {
             log.error("No links to scrap.");
         } else {
             int adCounter = 0;
 
-            for(String link : links) {
+            for (String link : links) {
                 ScrapService.ScrapedAd scrapedAd = scrapService.load(link);
 
-                if(scrapedAd.getRemoved()) {
+                if (scrapedAd.getRemoved()) {
                     log.error("Ad has been removed from website: {}.", link);
-                } else if(duplicateService.exists(scrapedAd.getShortenedLink())) {
+                } else if (duplicateService.exists(scrapedAd.getShortenedLink())) {
                     log.error("Duplicate ad: {}.", link);
                 } else {
                     writeService.writeToSheet(scrapedAd.transform());
@@ -72,10 +75,13 @@ public class FillService {
     @SneakyThrows
     private List<String> getLinksToScrap() {
         ValueRange result = spreadsheet.values()
-            .get(googleCredentialsConfiguration.getSpreadsheetId(), dallConfiguration.getLinksRange())
+            .get(
+                googleCredentialsConfiguration.getSpreadsheetId(),
+                dallConfiguration.getLinksRange()
+            )
             .execute();
 
-        if(result.getValues() == null) {
+        if (result.getValues() == null) {
             return new ArrayList<>();
         } else {
             return result.getValues()

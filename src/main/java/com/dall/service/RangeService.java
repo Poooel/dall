@@ -5,7 +5,6 @@ import com.dall.config.GoogleCredentialsConfiguration;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,8 +13,7 @@ public class RangeService {
     private final GoogleCredentialsConfiguration googleCredentialsConfiguration;
     private final DallConfiguration dallConfiguration;
 
-    @Autowired
-    public RangeService(
+    RangeService(
         Sheets sheets,
         GoogleCredentialsConfiguration googleCredentialsConfiguration,
         DallConfiguration dallConfiguration
@@ -47,6 +45,11 @@ public class RangeService {
         int resultRange = result.getValues() != null ? result.getValues().size() : 0;
         int finalRangeValue = dallConfiguration.getStartingCellCityCentre() + resultRange;
 
-        return String.format("%s!%s%d", sheet, dallConfiguration.getStartingColumnCityCentre(), finalRangeValue);
+        return String.format(
+            "%s!%s%d",
+            sheet,
+            dallConfiguration.getStartingColumnCityCentre(),
+            finalRangeValue
+        );
     }
 }
