@@ -168,6 +168,8 @@ public class ScrapService {
             String district = getDistrict();
             boolean isInCityCentre = isInCityCentre(district);
             String duration = this.mapsService.computeDuration(coordinates, isInCityCentre);
+            String mapsPath = !duration.equals("0 min") ? this.mapsService.buildMapsURL(coordinates,
+                isInCityCentre) : "No path available";
 
             return new Ad(getShortenedLink(),
                 getAddress(),
@@ -177,8 +179,7 @@ public class ScrapService {
                 getLastModified(),
                 getViews(),
                 duration,
-                !duration.equals("0 min") ? this.mapsService.buildMapsUrl(coordinates,
-                    isInCityCentre) : "No path available",
+                mapsPath,
                 getPrice(),
                 getPer(),
                 dateService.getNow(),

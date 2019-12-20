@@ -148,6 +148,7 @@ public class UpdateService {
                 ad.getLastModified(),
                 ad.getViews(),
                 ad.getDuration(),
+                ad.getMapsPath(),
                 ad.getPrice(),
                 ad.getPer(),
                 ad.getDateAdded(),
