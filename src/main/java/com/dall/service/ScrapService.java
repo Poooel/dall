@@ -4,16 +4,15 @@ import com.dall.config.DallConfiguration;
 import com.dall.entity.Ad;
 import com.google.common.collect.ImmutableMap;
 import com.google.maps.model.LatLng;
+import java.io.IOException;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @Slf4j
@@ -22,37 +21,44 @@ public class ScrapService {
     private final MapsService mapsService;
     private final DallConfiguration dallConfiguration;
 
-    @Autowired
-    public ScrapService(DateService dateService, MapsService mapsService, DallConfiguration dallConfiguration) {
+    ScrapService(
+        DateService dateService,
+        MapsService mapsService,
+        DallConfiguration dallConfiguration
+    ) {
         this.dateService = dateService;
         this.mapsService = mapsService;
         this.dallConfiguration = dallConfiguration;
     }
 
-    public ScrapedAd load(String link) {
+    ScrapedAd load(String link) {
         try {
             Document document = Jsoup.connect(link).get();
             return new ScrapedAd(document, dateService, mapsService, dallConfiguration);
-        } catch(IOException e) {
+        } catch (IOException e) {
             log.error("Unable to scrap ad.", e);
             return null;
         }
     }
 
     static class ScrapedAd {
-        private static final Map<String, String> transformerLeaseTime = ImmutableMap.of("Minimum 1 Year",
+        private static final Map<String, String> transformerLeaseTime = ImmutableMap.of(
+            "Minimum 1 Year",
             "1 Year",
             "Minimum 6 Months",
             "6 Months",
             "Minimum 3 Months",
             "3 Months",
             "No Minimum",
-            "No minimum");
+            "No minimum"
+        );
 
-        private static final Map<String, String> transformerPer = ImmutableMap.of("Per month",
+        private static final Map<String, String> transformerPer = ImmutableMap.of(
+            "Per month",
             "Month",
             "Per week",
-            "Week");
+            "Week"
+        );
 
         private final Document document;
         private final DateService dateService;
@@ -84,7 +90,7 @@ public class ScrapService {
             Pattern pattern = Pattern.compile("(Dublin )\\d+");
             Matcher matcher = pattern.matcher(address);
 
-            if(matcher.find()) {
+            if (matcher.find()) {
                 return matcher.group();
             } else {
                 log.error("Couldn't find district in the address!");
@@ -93,7 +99,8 @@ public class ScrapService {
         }
 
         public String getLeaseTime() {
-            return transformerLeaseTime.get(document.select(".description_block > div").first().ownText());
+            return transformerLeaseTime
+                .get(document.select(".description_block > div").first().ownText());
         }
 
         public String getNumberOfBathrooms() {
@@ -102,7 +109,7 @@ public class ScrapService {
             Pattern pattern = Pattern.compile("\\d{1}(?= Bathroom)");
             Matcher matcher = pattern.matcher(overview);
 
-            if(matcher.find()) {
+            if (matcher.find()) {
                 return matcher.group();
             } else {
                 log.error("Couldn't find number of bathrooms in the property overview!");
@@ -111,16 +118,18 @@ public class ScrapService {
         }
 
         public String getLastModified() {
-            String descriptionExtras = document.select("#description .description_extras").first().html();
-            String lastModified = descriptionExtras.split("<h3>Date Entered/Renewed:</h3>")[1].split(
-                "<h3>Property Views:</h3>")[0].split(" ")[0];
+            String descriptionExtras = document
+                .select("#description .description_extras").first().html();
+            String lastModified = descriptionExtras
+                .split("<h3>Date Entered/Renewed:</h3>")[1].split("<h3>Property Views:</h3>")[0]
+                .split(" ")[0];
 
             return dateService.format(lastModified);
         }
 
         public String getViews() {
-            String descriptionExtras = document.select("#description .description_extras").first().html();
-
+            String descriptionExtras = document
+                .select("#description .description_extras").first().html();
             return descriptionExtras.split("<h3>Property Views:</h3>")[1].replace(",", "").trim();
         }
 
@@ -129,7 +138,7 @@ public class ScrapService {
             Pattern regex = Pattern.compile("(-?\\d+.\\d+),(-?\\d+.\\d+)");
             Matcher matcher = regex.matcher(link);
             LatLng coordinates = new LatLng();
-            if(matcher.find()) {
+            if (matcher.find()) {
                 coordinates.lat = Double.parseDouble(matcher.group(1));
                 coordinates.lng = Double.parseDouble(matcher.group(2));
             }
@@ -150,7 +159,8 @@ public class ScrapService {
         }
 
         public boolean getRemoved() {
-            return !document.select("#agreed").isEmpty() || !document.select(".errorMessages").isEmpty();
+            return !document
+                .select("#agreed").isEmpty() || !document.select(".errorMessages").isEmpty();
         }
 
         public Ad transform() {
@@ -167,7 +177,7 @@ public class ScrapService {
                 getLastModified(),
                 getViews(),
                 duration,
-                !duration.equals("0 min") ? this.mapsService.buildMapsURL(coordinates,
+                !duration.equals("0 min") ? this.mapsService.buildMapsUrl(coordinates,
                     isInCityCentre) : "No path available",
                 getPrice(),
                 getPer(),
