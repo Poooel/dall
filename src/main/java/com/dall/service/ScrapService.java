@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -163,23 +162,26 @@ public class ScrapService {
                 .select("#agreed").isEmpty() || !document.select(".errorMessages").isEmpty();
         }
 
-        public Ad transform() {
-            LatLng coordinates = getCoordinates();
-            String district = getDistrict();
-            boolean isInCityCentre = isInCityCentre(district);
-            String duration = this.mapsService.computeDuration(coordinates, isInCityCentre);
-            String mapsPath = !duration.equals("0 min") ? this.mapsService.buildMapsURL(coordinates,
-                isInCityCentre) : "No path available";
+        public String getDuration() {
+            return mapsService.computeDuration(getCoordinates(), isInCityCentre(getDistrict()));
+        }
+        
+        public String getMapsPath() {
+            return getDuration().equals("0 min")
+                ? mapsService.buildMapsUrl(getCoordinates(), isInCityCentre(getDistrict()))
+                : "No path available";
+        }
 
+        public Ad transform() {
             return new Ad(getShortenedLink(),
                 getAddress(),
-                district,
+                getDistrict(),
                 getLeaseTime(),
                 getNumberOfBathrooms(),
                 getLastModified(),
                 getViews(),
-                duration,
-                mapsPath,
+                getDuration(),
+                getMapsPath(),
                 getPrice(),
                 getPer(),
                 dateService.getNow(),
