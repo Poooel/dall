@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -65,6 +64,10 @@ public class UpdateService {
 
     private List<Ad> updateAds(List<Ad> ads) {
         for (Ad ad : ads) {
+            if (ad.isRemoved()) {
+                continue;
+            }
+
             ScrapService.ScrapedAd updatedAd = scrapService.load(ad.getShortenedLink());
 
             ad.setDateAdded(dateService.getNow());
